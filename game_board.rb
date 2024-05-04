@@ -13,6 +13,16 @@ module GameBoard
       end
     end
 
+    def fill_cell(coordinates, player_num)
+      x_coord = coordinates[0]
+      y_coord = coordinates[1]
+      @grid[x_coord][y_coord].fill(player_num)
+    end
+
+    def get_cell(x, y)
+      @grid[x][y]
+    end
+
     private
 
     def create_grid
@@ -29,11 +39,16 @@ module GameBoard
   end
 
   class Cell
-    attr_accessor :is_filled, :content
+    attr_reader :is_filled, :content
 
     def initialize
       @content = "-"
       @is_filled = false
+    end
+
+    def fill(player_num)
+      @is_filled = true
+      @content = (player_num == 1) ? "X" : "O"
     end
   end
 end
