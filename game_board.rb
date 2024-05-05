@@ -5,6 +5,7 @@ module GameBoard
     end
 
     def display
+      puts
       for row in @grid
         for cell in row
           print cell.content
@@ -12,6 +13,7 @@ module GameBoard
 
         puts "\n"
       end
+      puts
     end
 
     def fill_cell(coordinates, symbol)
@@ -67,6 +69,12 @@ module GameBoard
       left_diagonal.all?(symbol)
     end
 
+    def clear
+      grid.each do |row|
+        row.each { |cell| cell.reset }
+      end
+    end
+
     private
 
     def grid
@@ -98,6 +106,10 @@ module GameBoard
     def fill(symbol)
       @is_filled = true
       @content = symbol
+    end
+
+    def reset
+      initialize
     end
   end
 end
