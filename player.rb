@@ -1,18 +1,28 @@
 class Player
-  def initialize(num)
-    @player_num = num
+  attr_accessor :player_num, :symbol
+
+  def initialize(player_num)
+    self.player_num = player_num
     @turns_played = 0
+    assign_symbol(player_num)
   end
 
   def play_turn(board)
     turn_coord = get_coordinates(board)
-    board.fill_cell(turn_coord, player_num)
+    board.fill_cell(turn_coord, symbol)
+    @current_play = turn_coord
+  end
+
+  def won?(board)
+    board.row_equal?(@current_play[0], symbol) ||
+      board.column_equal?(@current_play[1], symbol) ||
+      board.diagonal_equal?(@current_play, symbol)
   end
 
   private
 
-  def player_num
-    @player_num
+  def assign_symbol(player_num)
+    @symbol = (player_num == 1) ? 'X' : 'O'
   end
 
   def get_coordinates(board)
