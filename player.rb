@@ -51,18 +51,17 @@ class Player
   private
 
   def assign_symbol(player_num)
-    @symbol = (player_num == 1) ? 'X' : 'O'
+    @symbol = (player_num == 1) ? ' X' : ' O'
   end
 
   def get_coordinates(board)
     x_coord = nil
     y_coord = nil
-
     loop do
-      puts "Player #{@player_num} enter x coordinate: "
-      x_coord = gets.chomp.to_i
-      puts "Player #{@player_num} enter y coordinate: "
-      y_coord = gets.chomp.to_i
+      puts "Player #{@player_num} enter coordinates: "
+      input = gets.chomp
+      x_coord = input[0].to_i
+      y_coord = input[1].to_i
 
       if board.get_cell(x_coord, y_coord).is_filled
         puts "That cell is filled. Pick a different one"

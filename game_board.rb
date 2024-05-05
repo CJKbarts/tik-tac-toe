@@ -6,12 +6,13 @@ module GameBoard
 
     def display
       puts
+      puts "+----+----+----+"
       for row in @grid
         for cell in row
-          print cell.content
+          print "| #{cell.content} "
         end
-
-        puts "\n"
+        puts "|"
+        puts "+----+----+----+"
       end
       puts
     end
@@ -83,13 +84,19 @@ module GameBoard
 
     def create_grid
       result = Array.new(3)
-      3.times { |n| result[n - 1] = create_row(n - 1) }
+      for i in 0..2
+        result[i] = create_row(i)
+      end
+
       result
     end
 
-    def create_row(x)
+    def create_row(row_num)
       result = Array.new(3)
-      3.times { |n| result[n - 1] = Cell.new() }
+      for j in 0..2
+        result[j] = Cell.new(row_num, j)
+      end
+
       result
     end
   end
@@ -97,8 +104,8 @@ module GameBoard
   class Cell
     attr_reader :is_filled, :content
 
-    def initialize
-      @content = "-"
+    def initialize(row_num, column_num)
+      @content = row_num.to_s + column_num.to_s
       @is_filled = false
       @player_num = nil
     end
