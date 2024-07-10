@@ -70,8 +70,8 @@ class Board
   end
 
   def clear
-    grid.each do |row|
-      row.each { |cell| cell.reset }
+    grid.each_with_index do |row, row_index|
+      row.each_with_index { |cell, cell_index| cell.reset(row_index, cell_index) }
     end
   end
 
