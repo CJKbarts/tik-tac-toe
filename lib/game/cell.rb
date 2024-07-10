@@ -12,7 +12,7 @@ class Cell
     @content = symbol
   end
 
-  def reset
-    initialize
+  def reset(row_index, column_index)
+    initialize(row_index, column_index)
   end
 end
