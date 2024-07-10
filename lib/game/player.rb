@@ -1,4 +1,5 @@
 class Player
+  include Display
   attr_accessor :symbol
   attr_reader :turns_played
 
@@ -33,41 +34,38 @@ class Player
   end
 
   def compare(other)
-    if self.rounds_won == other.rounds_won
-      return 0
-    elsif self.rounds_won > other.rounds_won
-      return 1
+    if rounds_won == other.rounds_won
+      0
+    elsif rounds_won > other.rounds_won
+      1
     else
-      return -1
+      -1
     end
   end
 
   protected
 
-  def rounds_won
-    @rounds_won
-  end
+  attr_reader :rounds_won
 
   private
 
   def assign_symbol(player_num)
-    @symbol = (player_num == 1) ? ' X' : ' O'
+    @symbol = player_num == 1 ? 'X' : 'O'
   end
 
   def get_coordinates(board)
     x_coord = nil
     y_coord = nil
     loop do
-      puts "Player #{@player_num} enter coordinates: "
-      input = gets.chomp
-      x_coord = input[0].to_i
-      y_coord = input[1].to_i
+      print "Player #{@player_num} enter chosen cell: "
+      choice = gets.chomp.upcase
+      coordinates = CELL_CONTENTS.key(choice)
+      x_coord = coordinates[0].to_i
+      y_coord = coordinates[1].to_i
 
-      if board.get_cell(x_coord, y_coord).is_filled
-        puts "That cell is filled. Pick a different one"
-      else
-        break
-      end
+      break unless board.get_cell(x_coord, y_coord).is_filled
+
+      puts 'That cell is filled. Pick a different one'
     end
 
     result = []

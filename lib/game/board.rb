@@ -1,19 +1,7 @@
 class Board
+  include Display
   def initialize
     @grid = create_grid
-  end
-
-  def display
-    puts
-    puts '+----+----+----+'
-    for row in @grid
-      for cell in row
-        print "| #{cell.content} "
-      end
-      puts '|'
-      puts '+----+----+----+'
-    end
-    puts
   end
 
   def fill_cell(coordinates, symbol)
