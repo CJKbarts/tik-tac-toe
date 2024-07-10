@@ -4,6 +4,50 @@ require_relative '../lib/game/board'
 require_relative '../lib/game'
 
 describe Game do
+  describe '#find_winner' do
+    subject(:game_winner) { described_class.new }
+
+    context 'when player 1 wins' do
+      before do
+        allow(game_winner.board).to receive(:display)
+        allow(game_winner.player1).to receive(:play_turn)
+        allow(game_winner.player2).to receive(:play_turn)
+        allow(game_winner.player1).to receive(:turns_played).and_return(3)
+        allow(game_winner.player1).to receive(:won?).and_return(true)
+      end
+
+      it 'returns player 1' do
+        expect(game_winner.find_winner).to eql(game_winner.player1)
+      end
+    end
+
+    context 'when player 2 wins' do
+      before do
+        allow(game_winner.board).to receive(:display)
+        allow(game_winner.player1).to receive(:play_turn)
+        allow(game_winner.player2).to receive(:play_turn)
+        allow(game_winner.player2).to receive(:turns_played).and_return(3)
+        allow(game_winner.player2).to receive(:won?).and_return(true)
+      end
+
+      it 'returns player 2' do
+        expect(game_winner.find_winner).to eql(game_winner.player2)
+      end
+    end
+
+    context 'when no player wins' do
+      before do
+        allow(game_winner.board).to receive(:display)
+        allow(game_winner.player1).to receive(:play_turn)
+        allow(game_winner.player2).to receive(:play_turn)
+      end
+
+      it 'returns nil' do
+        expect(game_winner.find_winner).to be_nil
+      end
+    end
+  end
+
   describe '#player_input' do
     subject(:game_input) { described_class.new }
     let(:criteria) { /[yn]/ }

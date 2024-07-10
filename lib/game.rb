@@ -8,31 +8,29 @@ class Game
   end
 
   def play_round
-    found_winner = false
-    winner = nil
-    count = 1
+    winner = find_winner
+    round_results(winner)
+    continue?
+  end
 
-    until found_winner
+  def find_winner
+    9.times do |count|
       board.display
-      current_player = count.odd? ? player1 : player2
+      current_player = count.even? ? player1 : player2
       current_player.play_turn(board)
-      count += 1
-      if current_player.turns_played >= 3 && current_player.won?(board)
-        found_winner = true
-        winner = current_player
-      elsif count == 9
-        break
-      end
+      return current_player if current_player.turns_played >= 3 && current_player.won?(board)
     end
 
+    nil
+  end
+
+  def round_results(winner)
     if winner.nil?
       puts 'This round was a draw'
     else
       puts "#{winner} won this round"
     end
-
     puts
-    continue?
   end
 
   def continue?
