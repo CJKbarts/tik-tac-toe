@@ -4,4 +4,4 @@ require_relative 'lib/game/board'
 require_relative 'lib/game'
 
 game = Game.new
-game.play_game
+game.play_round
