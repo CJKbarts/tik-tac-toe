@@ -1,5 +1,6 @@
 class Board
   include Display
+
   def initialize
     @grid = create_grid
   end
@@ -10,16 +11,16 @@ class Board
     @grid[x_coord][y_coord].fill(symbol)
   end
 
-  def get_cell(x, y)
-    @grid[x][y]
+  def get_cell(row_index, column_index)
+    @grid[row_index][column_index]
   end
 
-  def row_equal?(row_num, symbol)
-    grid[row_num].all? { |cell| cell.content == symbol }
+  def row_equal?(row_index, symbol)
+    grid[row_index].all? { |cell| cell.content == symbol }
   end
 
-  def column_equal?(column_num, symbol)
-    column = grid.map { |row| row[column_num].content }
+  def column_equal?(column_index, symbol)
+    column = grid.map { |row| row[column_index].content }
     column.all?(symbol)
   end
 
@@ -76,10 +77,10 @@ class Board
     result
   end
 
-  def create_row(row_num)
+  def create_row(row_index)
     result = Array.new(3)
     for j in 0..2
-      result[j] = Cell.new(row_num, j)
+      result[j] = Cell.new(row_index, j)
     end
 
     result

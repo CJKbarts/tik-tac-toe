@@ -2,8 +2,8 @@ class Cell
   include Display
   attr_reader :is_filled, :content
 
-  def initialize(row_num, column_num)
-    @content = CELL_CONTENTS[row_num.to_s + column_num.to_s]
+  def initialize(row_index, column_index)
+    @content = CELL_CONTENTS[row_index.to_s + column_index.to_s]
     @is_filled = false
     @player_num = nil
   end
