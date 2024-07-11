@@ -9,6 +9,7 @@ class Game
 
   def play_round
     winner = find_winner
+    board.display
     round_results(winner)
     continue?
   end
