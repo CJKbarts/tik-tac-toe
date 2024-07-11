@@ -1,7 +1,6 @@
 class Player
   include Display
-  attr_accessor :symbol
-  attr_reader :turns_played
+  attr_reader :turns_played, :rounds_won, :symbol
 
   def initialize(player_num)
     @player_num = player_num
@@ -11,16 +10,16 @@ class Player
   end
 
   def play_turn(board)
-    turn_coord = get_coordinates(board)
-    board.fill_cell(turn_coord, symbol)
-    @current_play = turn_coord
+    cell = choose_cell(board)
+    cell.fill(symbol)
+    @current_cell = cell
     @turns_played += 1
   end
 
   def won?(board)
-    result = board.row_equal?(@current_play[0], symbol) ||
-             board.column_equal?(@current_play[1], symbol) ||
-             board.diagonal_equal?(@current_play, symbol)
+    result = board.row_complete?(current_cell.row, symbol) ||
+             board.column_complete?(current_cell.column, symbol) ||
+             board.diagonal_complete?([current_cell.row, current_cell.column], symbol)
     increase_rounds_won if result
     result
   end
@@ -34,43 +33,33 @@ class Player
   end
 
   def compare(other)
-    if rounds_won == other.rounds_won
-      0
-    elsif rounds_won > other.rounds_won
-      1
-    else
-      -1
-    end
+    rounds_won <=> other.rounds_won
   end
 
-  protected
-
-  attr_reader :rounds_won
-
   private
+
+  attr_reader :current_cell
 
   def assign_symbol(player_num)
     @symbol = player_num == 1 ? 'X' : 'O'
   end
 
-  def get_coordinates(board)
-    x_coord = nil
-    y_coord = nil
-    loop do
-      print "Player #{@player_num} enter chosen cell: "
-      choice = gets.chomp.upcase
-      coordinates = CELL_CONTENTS.key(choice)
-      x_coord = coordinates[0].to_i
-      y_coord = coordinates[1].to_i
+  def choose_cell(board)
+    choice = ''
+    choice = board.get_cell(player_input(/[A-Z]/, "#{self} choose an empty cell: ",
+                                         'That is not a valid cell')) until board.empty?(choice)
+    choice
+  end
 
-      break unless board.get_cell(x_coord, y_coord).is_filled
-
-      puts 'That cell is filled. Pick a different one'
+  def player_input(criteria, prompt, error_message)
+    print prompt
+    input = gets.chomp.upcase
+    until input.match?(criteria)
+      print error_message
+      input = gets.chomp.upcase
     end
 
-    result = []
-    result.push(x_coord)
-    result.push(y_coord)
+    input
   end
 
   def increase_rounds_won
