@@ -5,64 +5,46 @@ class Board
     @grid = create_grid
   end
 
-  def get_cell(string)
-    coordinates = convert_to_coordinates(string)
-    @grid[coordinates[0]][coordinates[1]]
-  end
-
   def row_complete?(row_index, symbol)
-    grid[row_index].all? { |cell| cell.content == symbol }
+    grid[row_index].all? { |cell| cell == symbol }
   end
 
   def column_complete?(column_index, symbol)
-    column = grid.map { |row| row[column_index].content }
+    column = grid.map { |row| row[column_index] }
     column.all?(symbol)
   end
 
-  def diagonal_complete?(coordinates, symbol)
-    if coordinates[0] == coordinates[1] && coordinates[0] + coordinates[1] == 2
-      right_diagonal_complete?(symbol) || left_diagonal_complete?(symbol)
-    elsif coordinates[0] + coordinates[1] == 2
-      left_diagonal_complete?(symbol)
-    elsif coordinates[0] == coordinates[1]
-      right_diagonal_complete?(symbol)
-    else
-      false
-    end
+  def diagonal_complete?(symbol)
+    right_diagonal_complete?(symbol) || left_diagonal_complete?(symbol)
   end
 
   def right_diagonal_complete?(symbol)
-    right_diagonal = []
-    grid.each_with_index do |row, row_index|
-      row.each_with_index do |cell, column_index|
-        right_diagonal.push(cell.content) if row_index == column_index
-      end
-    end
-
+    right_diagonal = [[0, 0], [1, 1], [2, 2]].map { |position| grid[position[0]][position[1]] }
     right_diagonal.all?(symbol)
   end
 
   def left_diagonal_complete?(symbol)
-    left_diagonal = []
-    grid.each_with_index do |row, row_index|
-      row.each_with_index do |cell, column_index|
-        left_diagonal.push(cell.content) if row_index + column_index == 2
-      end
-    end
-
+    left_diagonal = [[0, 2], [1, 1], [0, 2]].map { |position| grid[position[0]][position[1]] }
     left_diagonal.all?(symbol)
   end
 
   def clear
-    grid.each_with_index do |row, row_index|
-      row.each_with_index { |cell, cell_index| cell.reset(row_index, cell_index) }
-    end
+    initialize
   end
 
-  def empty?(cell)
-    return false if cell == ''
+  def empty?(coordinates)
+    return false if coordinates.empty?
 
-    !cell.is_filled
+    cell = cell(coordinates)
+    cell.match?(/[A-I]/)
+  end
+
+  def cell(coordinates)
+    @grid[coordinates[0]][coordinates[1]]
+  end
+
+  def fill(coordinates, symbol)
+    @grid[coordinates[0]][coordinates[1]] = symbol
   end
 
   private
@@ -77,12 +59,7 @@ class Board
 
   def create_row(row_index)
     result = Array.new(3)
-    (0..2).each { |column_index| result[column_index] = Cell.new(row_index, column_index) }
+    (0..2).each { |column_index| result[column_index] = convert_to_letter(row_index, column_index) }
     result
-  end
-
-  def convert_to_coordinates(cell)
-    coordinates = CELL_CONTENTS.key(cell)
-    [coordinates[0].to_i, coordinates[1].to_i]
   end
 end

@@ -41,11 +41,20 @@ module Display
     puts BOX_LINES[:top_line]
     @grid.each_with_index do |row, row_index|
       row.each do |cell|
-        print "#{BOX_CHARACTERS[:vertical_line]} #{cell.content} "
+        print "#{BOX_CHARACTERS[:vertical_line]} #{cell} "
       end
       puts BOX_CHARACTERS[:vertical_line]
       puts row_index == 2 ? BOX_LINES[:bottom_line] : BOX_LINES[:middle_line]
     end
     puts
+  end
+
+  def convert_to_coordinates(cell)
+    coordinates = CELL_CONTENTS.key(cell)
+    [coordinates[0].to_i, coordinates[1].to_i]
+  end
+
+  def convert_to_letter(row_index, column_index)
+    CELL_CONTENTS[row_index.to_s + column_index.to_s]
   end
 end
